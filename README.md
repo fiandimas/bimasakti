@@ -36,7 +36,7 @@ This project is structured following **SOLID principles**, with a **Repository P
 
 - PHP >= 8.1
 - Composer
-- MySQL / PostgreSQL
+- PostgreSQL
 - Laravel 10+
 
 ### Installation
@@ -59,9 +59,9 @@ cp .env.example .env
 
 **4. Configure your database** in `.env`
 ```env
-DB_CONNECTION=mysql
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
-DB_PORT=3306
+DB_PORT=5432
 DB_DATABASE=your_database
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
@@ -114,7 +114,7 @@ The API will be available at `http://127.0.0.1:8000`.
 | `GET` | `/api/v1/@me` | `auth:api` | Get authenticated user info |
 
 ### Orders & Transactions
-> All routes below are protected by `sec.token` middleware (custom security token).
+> All routes below are protected by both `sec.token` and `auth:api` middleware.
 
 | Method | Endpoint | Description |
 |---|---|---|

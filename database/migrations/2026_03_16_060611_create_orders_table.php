@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('reff', 15)->unique();
             $table->string('name', 255);
             $table->string('phone', 16);
-            $table->string('code', 50)->unique();
+            $table->string('code', 50);
             $table->enum('status', ['pending', 'paid', 'expired'])->default('pending');
             $table->timestamp('expired_at');
             $table->timestamp('paid_at')->nullable();

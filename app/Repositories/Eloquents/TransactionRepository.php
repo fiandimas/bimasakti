@@ -22,6 +22,6 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        return $query->paginate(8);
+        return $query->orderBy('updated_at', 'desc')->paginate(8);
     }
 }

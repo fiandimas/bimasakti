@@ -21,7 +21,8 @@ class OrderRepository implements OrderRepositoryInterface
                     ->orWhere('code', 'like', "%$search%");
             });
         }
-        return $query->paginate(8);
+
+        return $query->orderBy('updated_at', 'desc')->paginate(8);
     }
 
     public function create(array $data): Order

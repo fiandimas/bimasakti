@@ -20,7 +20,7 @@ Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::get('/v1/@me', [AuthController::class, 'me'])->middleware('auth:api');
 
 Route::group([
-    'middleware' => ['sec.token'],
+    'middleware' => ['sec.token', 'auth:api'],
     'prefix' => 'v1',
 ], function () {
     Route::post('/order', [OrderController::class, 'order']);

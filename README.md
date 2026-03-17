@@ -1,67 +1,207 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧾 Order Management API
 
+A RESTful API built with **Laravel** following **SOLID principles**, featuring JWT authentication, order lifecycle management, background job processing, and global search.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## ✨ Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- 🔐 JWT Authentication (login & protected routes)
+- 📦 Create & manage orders
+- 💳 Flag orders as **paid** or **expired**
+- 🔍 Global search across orders & transactions
+- 📄 Simple pagination
+- ⚙️ Background job queue support
+- ⏰ Artisan command for expired order processing (cron-ready)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🏗️ Architecture
 
-## Learning Laravel
+This project is structured following **SOLID principles**, with a **Repository Pattern** for data access abstraction:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Principle | Implementation |
+|---|---|
+| **S** — Single Responsibility | Controllers delegate to Services; Services delegate to Repositories; DTOs handle data shaping; Jobs handle async side-effects |
+| **O** — Open/Closed | New repository implementations can be swapped in without touching Services or Controllers |
+| **L** — Liskov Substitution | `OrderRepository` and `TransactionRepository` are interchangeable through their interfaces |
+| **I** — Interface Segregation | `OrderRepositoryInterface` and `TransactionRepositoryInterface` expose only what each domain needs |
+| **D** — Dependency Inversion | Controllers depend on Services; Services depend on Repository interfaces — all wired via `RepositoryServiceProvider` |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Getting Started
 
-## Laravel Sponsors
+### Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP >= 8.1
+- Composer
+- MySQL / PostgreSQL
+- Laravel 10+
 
-### Premium Partners
+### Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**1. Clone the repository**
+```bash
+git clone <your-repo-url>
+cd <project-folder>
+```
 
-## Contributing
+**2. Install dependencies**
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**3. Copy environment file**
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+**4. Configure your database** in `.env`
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**5. Run database migrations**
+```bash
+php artisan migrate
+```
 
-## Security Vulnerabilities
+**6. Seed the database** *(creates admin account + dummy orders)*
+```bash
+php artisan db:seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**7. Generate JWT secret**
+```bash
+php artisan jwt:secret
+```
 
-## License
+**8. Start the queue worker** *(for background job processing)*
+```bash
+php artisan queue:work
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**9. Start the development server**
+```bash
+php artisan serve
+```
+
+The API will be available at `http://127.0.0.1:8000`.
+
+---
+
+## 🔑 Default Credentials
+
+| Field | Value |
+|---|---|
+| Email | `admin@admin.com` |
+| Password | `admin` |
+
+---
+
+## 📡 API Endpoints
+
+### Auth
+| Method | Endpoint | Middleware | Description |
+|---|---|---|---|
+| `POST` | `/api/v1/auth/login` | — | Login and receive JWT token (set as cookie) |
+| `GET` | `/api/v1/@me` | `auth:api` | Get authenticated user info |
+
+### Orders & Transactions
+> All routes below are protected by `sec.token` middleware (custom security token).
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/v1/order` | Create a new order |
+| `POST` | `/api/v1/payment` | Flag an order as paid or expired |
+| `GET` | `/api/v1/status?reff={reff}` | Check order status by reference number |
+| `GET` | `/api/v1/orders?search={keyword}` | List all orders with optional search |
+| `GET` | `/api/v1/transactions?search={keyword}` | List all transactions with optional search |
+
+---
+
+## ⏰ Expired Order Processing
+
+To mark unpaid orders as expired, run the following command manually or via cron:
+
+```bash
+php artisan app:process-expired-order
+```
+
+**Recommended crontab setup** (runs every minute):
+```cron
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Or add directly to your crontab for the command itself:
+```cron
+* * * * * cd /path-to-your-project && php artisan app:process-expired-order >> /dev/null 2>&1
+```
+
+---
+
+## 🗂️ Project Structure
+
+```
+app/
+├── Console/
+│   ├── Commands/
+│   │   └── ProcessExpiredOrder.php       # Artisan command to expire unpaid orders
+│   └── Kernel.php
+├── DTOs/
+│   └── OrderDTO.php                      # Data Transfer Object for order input
+├── Exceptions/
+│   ├── Handler.php
+│   └── PaymentException.php              # Custom exception for payment failures
+├── Http/
+│   ├── Controllers/Api/V1/
+│   │   ├── AuthController.php            # Login & authenticated user info
+│   │   ├── OrderController.php           # Order CRUD & payment flagging
+│   │   └── TransactionController.php     # Transaction listing
+│   ├── Middleware/
+│   │   ├── Authenticate.php
+│   │   ├── SecTokenMiddleware.php        # Custom security token middleware
+│   │   └── ...                           # Laravel default middlewares
+│   ├── Requests/
+│   │   ├── LoginRequest.php
+│   │   ├── OrderRequest.php
+│   │   └── PaymentRequest.php
+│   └── Resources/
+│       ├── OrderResource.php
+│       ├── PaymentResource.php
+│       └── StatusResource.php
+├── Jobs/
+│   └── ProcessPaidOrder.php              # Background job for paid order processing
+├── Models/
+│   ├── Order.php
+│   ├── Transaction.php
+│   └── User.php
+├── Providers/
+│   ├── AppServiceProvider.php
+│   ├── RepositoryServiceProvider.php     # Binds repository interfaces to implementations
+│   └── ...                               # Laravel default providers
+├── Repositories/
+│   ├── Contracts/
+│   │   ├── OrderRepositoryInterface.php
+│   │   └── TransactionRepositoryInterface.php
+│   └── Eloquents/
+│       ├── OrderRepository.php
+│       └── TransactionRepository.php
+├── Rules/
+│   └── ValidExpiredDate.php              # Custom validation rule for expiry dates
+└── Services/
+    ├── OrderService.php                  # Order business logic
+    └── TransactionService.php            # Transaction business logic
+```
+
+---
+
+## 📝 License
+
+This project is open-sourced under the [MIT License](LICENSE).

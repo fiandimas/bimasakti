@@ -26,5 +26,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (Throwable $e) {
+            return response()->json([
+                'message' => app()->isProduction() ? 'Server error' : $e->getMessage(),
+            ], 500);
+        });
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/v1/auth/login', [AuthController::class, 'login']);
+Route::get('/v1/@me', [AuthController::class, 'me'])->middleware('auth:api');
+
+Route::group([
+    'middleware' => ['sec.token'],
+    'prefix' => 'v1',
+], function () {
+    Route::post('/order', [OrderController::class, 'order']);
+    Route::post('/payment', [OrderController::class, 'payment']);
+    Route::get('/status', [OrderController::class, 'status']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/transactions', [TransactionController::class, 'index']);
 });
